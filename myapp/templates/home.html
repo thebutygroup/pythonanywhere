@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head><meta name="facebook-domain-verification" content="lcclc2sanqtptqjr075h1v3ol9hdtg" /><style>
+body{
+    text-align:center;
+    color: black;
+    font-family: Helvetica;
+    background-size: cover;
+    background-position:center center;
+    background-repeat: no-repeat;
+    background-attachment:fixed;
+}
+p {
+    display: inline;
+    width: 60%;
+    margin: auto;
+    position: relative;
+    background-color:rgba(0,140,100,0.5);
+}
+
+p.low {
+    display: inline;
+    width: 60%;
+    margin: auto;
+    position: relative;
+    /*background-color:rgb(0,140,100)*/
+    background-color:rgba(0,140,100,0.90);
+}
+a {
+    border-radius:3px;
+    display: inline;
+    background-color: rgba(250,250,250,1);
+    position: relative;
+    padding:25px 25px 25px 25px;
+    text-decoration:none;
+    color:Navy;
+}
+input {
+    border: 0;
+    padding: 12px;
+    font-size: 18px;
+}
+input[type="submit"] {
+    background:limegreen;
+    color:black;
+}
+
+
+
+</style>
+<!-- Facebook Pixel 1507679279372630 Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1507679279372630');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1507679279372630&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel 1507679279372630 Code -->
+<!-- Facebook Pixel 2459596277632306 Code 2 -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '2459596277632306');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=2459596277632306&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel 2459596277632306 Code -->
+<!-- Facebook Pixel 569581110847614 Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '569581110847614');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=569581110847614&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel 569581110847614 Code -->
+</head>
+<body>
+<img src="{% static 'IMG_4787.png' %}" height="250" width="250"/>
+
+<h1>Joe Buty</h1>
+<h1>Data Engineer</h1>
+
+
+<h2>    Hello,</h2>
+
+<h3><p>    Welcome to my webpage. If you are reading this you might be the
+first person to visit my website. So thanks.</p>
+<br></br>
+<br></br>
+<br><br>
+
+<!---<a href="http://joebuty.pythonanywhere.com/polls/">Take a poll</a>--->
+<!---<a href="http://joebuty.pythonanywhere.com/contact/">Contact Page</a>-->
+<a href="http://joebuty.pythonanywhere.com/resume/pdf">My Resume</a>
+<a href="https://github.com/JoeButy">My Repo</a>
+<a href="https://public.tableau.com/profile/reverend.dude#!/vizhome/NattyNames/NationalNames">My Tableau</a>
+<br><br>
+<br><br>
+<a href="http://joebuty.pythonanywhere.com/admin/">Site Admin</a>
+
+</h3>
+<br></br>
+<br></br>
+<p class="low">You visited this site on <b>{{right_now.date}}</b> at <b>{{right_now.time}}</b> local time.
+    Or in UTC: <b>{{right_now_utc}}</b>
+</p>
+
+
+<br></br>
+<br><br>
+
+
+
+<!--
+<body>
+
+    <p>If you want to stay in the loop leave your contact information below.</p>
+    <br><br>
+
+    {% if form.errors %}
+        <p style="color: red;">
+            Please correct the error{{ form.errors|pluralize }} below.
+        </p>
+    {% endif %}
+
+    <form action="" method="post">
+        <table>
+            {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+<br><br>
+
+-->
+
+
+<!--
+
+<h2>    <p>So if you would like to be in the loop enter your email. Thanks!</p>
+
+<input type='email' placeholder="Email">
+<form action="" method="post">
+{{ form_newsletter }}
+<input type="submit" name="Enter, Subscribe" value="Subscribe" />
+<input type="submit" name="Remove, Unsubscribe" value="Unsubscribe" />
+</form>
+<form action="/contact/" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" name="vemail" />
+</form>
+</body>
+-->
+
+<p class="low">You have the IP address: <b>{{user_ip}}</b></p>
+</html>

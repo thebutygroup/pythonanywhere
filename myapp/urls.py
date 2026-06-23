@@ -22,7 +22,6 @@ from django.shortcuts import render
 from myapp import views
 
 urlpatterns = [
-    path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
     path('index/', views.index, name='index'),
     path('', views.home, name='home'),

@@ -35,7 +35,6 @@ ALLOWED_HOSTS = ['joebuty.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'myapp',
-    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

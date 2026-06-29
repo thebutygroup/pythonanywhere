@@ -10,6 +10,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.home, name="home"),
     path("resume/", views.pdf, name="resume"),
+    path("ai-drone-tag/", views.drone, name="drone"),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,434 @@
+{% verbatim %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Drone Tag — Joe Buty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b100e; --panel:#121a16; --panel-2:#0f1714; --line:#1f2c26; --b:#2a3b33;
+    --ink:#e8ede9; --muted:#94a39c; --faint:#647069;
+    --teal:#5dcaa5; --teal-deep:#0c5a47; --coral:#f0997b; --amber:#fac775;
+    --font-disp:"Space Grotesk",system-ui,sans-serif;
+    --font-sans:"Inter",system-ui,sans-serif;
+    --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+    --measure:780px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--font-sans);font-size:17px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;padding:0 24px}
+  a{color:var(--teal);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:var(--measure);margin:0 auto;padding:36px 0 96px}
+
+  nav{display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--font-mono);font-size:12.5px;letter-spacing:.04em;
+    padding-bottom:28px;border-bottom:1px solid var(--line);margin-bottom:48px}
+  nav .right a{margin-left:18px;color:var(--muted)}
+  nav .right a:hover{color:var(--teal)}
+
+  .eyebrow{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--teal);margin:0 0 18px}
+  h1{font-family:var(--font-disp);font-weight:600;font-size:44px;line-height:1.06;
+    letter-spacing:-.02em;margin:0 0 18px}
+  .lede{font-size:20px;line-height:1.55;color:var(--muted);margin:0 0 30px;max-width:60ch}
+
+  .telemetry{display:flex;flex-wrap:wrap;border:1px solid var(--line);
+    border-radius:10px;background:var(--panel);font-family:var(--font-mono);
+    font-size:12.5px;overflow:hidden;margin:0 0 8px}
+  .telemetry span{padding:11px 16px;border-right:1px solid var(--line);color:var(--ink)}
+  .telemetry span:last-child{border-right:0}
+  .telemetry b{color:var(--teal);font-weight:500}
+
+  .rule{height:1px;background:var(--line);border:0;margin:56px 0}
+
+  .tag{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);margin:0 0 10px;
+    display:flex;align-items:baseline;gap:12px}
+  .tag .num{color:var(--coral);font-weight:500}
+  h2{font-family:var(--font-disp);font-weight:500;font-size:26px;line-height:1.2;
+    letter-spacing:-.01em;margin:0 0 16px}
+  p{margin:0 0 18px;max-width:64ch}
+  p:last-child{margin-bottom:0}
+  em{color:var(--ink);font-style:italic}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:22px 20px 16px;margin:26px 0 8px}
+  .panel svg{display:block;width:100%;height:auto}
+  .cap{font-family:var(--font-mono);font-size:12px;color:var(--faint);
+    padding-top:12px;margin-top:8px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+  /* controls */
+  .btn{font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
+    color:var(--teal);background:transparent;border:1px solid var(--b);
+    border-radius:7px;padding:7px 13px;cursor:pointer;transition:.18s}
+  .btn:hover{border-color:var(--teal);background:rgba(93,202,165,.08)}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{opacity:.5;cursor:default}
+
+  /* embedded diagram base classes (dark) */
+  svg text{font-family:var(--font-sans)}
+  svg .th{font-weight:500;font-size:14px;fill:var(--ink)}
+  svg .t{font-weight:400;font-size:14px;fill:var(--ink)}
+  svg .ts{font-weight:400;font-size:12px;fill:var(--muted)}
+  svg .arr{stroke:#7d8a84;stroke-width:1.5px;fill:none}
+  .c-gray rect{fill:#3b3d39;stroke:#8a8980}
+  .c-gray .th{fill:#f1efe8}.c-gray .ts{fill:#d3d1c7}
+  .c-teal rect{fill:#0c5a47;stroke:#5dcaa5}
+  .c-teal .th{fill:#e1f5ee}.c-teal .ts{fill:#9fe1cb}
+  .c-amber rect{fill:#5a330a;stroke:#ef9f27}
+  .c-amber .th{fill:#faeeda}.c-amber .ts{fill:#fac775}
+  .c-coral rect{fill:#6a2814;stroke:#f0997b}
+  .c-coral .th{fill:#faece7}.c-coral .ts{fill:#f5c4b3}
+
+  /* curriculum interaction */
+  .block{cursor:pointer}
+  .block rect{transition:stroke-width .18s, filter .18s}
+  .block:hover rect{stroke-width:1.6px}
+  .block.sel rect{stroke-width:2px}
+  .block:not(.sel) rect{filter:saturate(.7) brightness(.9)}
+  #phaseDetail{margin-top:14px;border-top:1px solid var(--line);padding-top:16px}
+  .pd-head{font-family:var(--font-mono);font-size:12px;color:var(--muted);
+    margin-bottom:12px;letter-spacing:.04em}
+  .pd-head b{color:var(--teal)}
+  .pd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+  .pd-cell{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+  .pd-cell .id{font-family:var(--font-mono);font-size:11.5px;color:var(--coral)}
+  .pd-cell .lab{font-size:13px;color:var(--ink);margin:2px 0 1px}
+  .pd-cell .det{font-size:12px;color:var(--muted);line-height:1.4}
+
+  /* funnel hover */
+  .fband{cursor:default}
+  .fband rect{transition:filter .18s}
+  .fband:hover rect{filter:brightness(1.18)}
+
+  /* single-step interaction */
+  .stage{transition:opacity .3s}
+  .pipeline.armed .stage{opacity:.4}
+  .pipeline.armed .stage.active{opacity:1}
+  .stage.active rect{stroke-width:2px}
+  #tickReadout{font-family:var(--font-mono);font-size:12px;color:var(--teal);
+    min-height:18px;margin-top:4px}
+
+  .close{font-family:var(--font-disp);font-weight:500;font-size:22px;line-height:1.35;
+    letter-spacing:-.01em;color:var(--ink);max-width:32ch;margin:8px 0 0}
+  footer{font-family:var(--font-mono);font-size:12px;color:var(--faint);
+    margin-top:40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+  @media (max-width:600px){
+    body{font-size:16px;padding:0 18px}
+    h1{font-size:33px}
+    .telemetry span{padding:9px 12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a href="/">&larr; joebuty</a>
+    <span class="right">
+      <a href="https://github.com/thebutygroup/AI-drone-tag">repo</a>
+      <a href="https://github.com/thebutygroup">github</a>
+    </span>
+  </nav>
+
+  <header>
+    <p class="eyebrow">AI Drone Tag &middot; Interactive brief</p>
+    <h1>Teaching a drone to catch a moving target</h1>
+    <p class="lede">A flight pilot that's learned, not programmed &mdash; trained entirely in simulation, with a control interface built to fly real hardware.</p>
+    <div class="telemetry">
+      <span><b>39-D</b> observation</span>
+      <span><b>4-D</b> action</span>
+      <span><b>100 Hz</b> control</span>
+      <span><b>256&times;256</b> policy</span>
+      <span><b>PPO</b> model-free</span>
+    </div>
+  </header>
+
+  <div style="margin-top:34px">
+    <p>Catching a drone that doesn't want to be caught is a control problem that resists hand-written rules. A target that weaves, brakes, and breaks sideways the moment it senses a threat will beat any fixed "if it goes left, follow left" logic. AI Drone Tag takes the other route: the interceptor's pilot is a neural network that <em>learns</em> to chase, discovered through reward and repetition rather than written by hand. It trains entirely in simulation &mdash; millions of chases &mdash; and its output is the same command a real flight controller already speaks, so the learned pilot is built from the start to leave the sim and fly real hardware.</p>
+  </div>
+
+  <hr class="rule">
+
+  <section>
+    <p class="tag"><span class="num">01</span> The system</p>
+    <h2>One loop, run a million times</h2>
+    <p>Every bit of behaviour comes out of a single closed loop. The drone senses its situation as a vector of numbers, a compact network turns that into a flight command, the simulated chase plays out the physics against an evading target, and a reward signal quietly tunes the network toward catching it. Run that loop enough and a pilot emerges &mdash; no chase logic was ever written, only a definition of what "good" looks like.</p>
+    <div class="panel">
+      <svg id="loopSvg" viewBox="0 0 680 320" role="img">
+        <title>The reinforcement-learning loop that trains the pilot.</title>
+        <desc>The drone senses 39 inputs, a neural-net pilot turns them into thrust and body-rate commands, a simulated chase against an evading target runs the physics, and a reward signal tunes the pilot. A pulse travels the loop to show it runs continuously.</desc>
+        <defs>
+          <marker id="aLg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7d8a84" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+          <marker id="aLa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ef9f27" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        </defs>
+        <g class="c-gray"><rect x="40" y="50" width="132" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="106" y="72" text-anchor="middle" dominant-baseline="central">What it sees</text>
+          <text class="ts" x="106" y="90" text-anchor="middle" dominant-baseline="central">39 inputs</text></g>
+        <g class="c-teal"><rect x="196" y="50" width="132" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="262" y="72" text-anchor="middle" dominant-baseline="central">Pilot (AI)</text>
+          <text class="ts" x="262" y="90" text-anchor="middle" dominant-baseline="central">neural net</text></g>
+        <g class="c-gray"><rect x="352" y="50" width="132" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="418" y="72" text-anchor="middle" dominant-baseline="central">Controls</text>
+          <text class="ts" x="418" y="90" text-anchor="middle" dominant-baseline="central">thrust + rates</text></g>
+        <g class="c-gray"><rect x="508" y="50" width="132" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="574" y="72" text-anchor="middle" dominant-baseline="central">Chase sim</text>
+          <text class="ts" x="574" y="90" text-anchor="middle" dominant-baseline="central">evading target</text></g>
+        <line x1="176" y1="78" x2="192" y2="78" class="arr" marker-end="url(#aLg)"/>
+        <line x1="332" y1="78" x2="348" y2="78" class="arr" marker-end="url(#aLg)"/>
+        <line x1="488" y1="78" x2="504" y2="78" class="arr" marker-end="url(#aLg)"/>
+        <path d="M574 106 L574 140 L106 140 L106 110" fill="none" stroke="#ef9f27" stroke-width="1" stroke-linecap="round" marker-end="url(#aLa)"/>
+        <g class="c-amber"><text class="ts" x="340" y="158" text-anchor="middle">reward tunes the pilot &mdash; closer is better</text></g>
+        <rect x="40" y="182" width="600" height="104" rx="12" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 4"/>
+        <text class="ts" x="60" y="206" text-anchor="start">Trained easy to hard, mastering each stage before the next</text>
+        <g class="c-gray"><rect x="60" y="226" width="146" height="40" rx="8" stroke-width="0.5"/>
+          <text class="th" x="133" y="246" text-anchor="middle" dominant-baseline="central">Hold steady</text></g>
+        <g class="c-gray"><rect x="256" y="226" width="146" height="40" rx="8" stroke-width="0.5"/>
+          <text class="th" x="329" y="246" text-anchor="middle" dominant-baseline="central">Chase a mover</text></g>
+        <g class="c-teal"><rect x="452" y="226" width="146" height="40" rx="8" stroke-width="0.5"/>
+          <text class="th" x="525" y="246" text-anchor="middle" dominant-baseline="central">Catch an evader</text></g>
+        <line x1="210" y1="246" x2="252" y2="246" class="arr" marker-end="url(#aLg)"/>
+        <line x1="406" y1="246" x2="448" y2="246" class="arr" marker-end="url(#aLg)"/>
+        <g>
+          <circle r="8" fill="#5dcaa5" opacity="0.18"/>
+          <circle r="3.5" fill="#5dcaa5"/>
+          <animateMotion id="loopMotion" dur="5.5s" repeatCount="indefinite" rotate="0"
+            path="M106 78 L262 78 L418 78 L574 78 L574 140 L106 140 Z"/>
+        </g>
+      </svg>
+      <div class="cap">
+        <span>FIG 01 &mdash; sense &rarr; decide &rarr; act &rarr; reward, closed.</span>
+        <button class="btn" id="loopBtn">Pause flow</button>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <p class="tag"><span class="num">02</span> The curriculum</p>
+    <h2>Learning to fly, then to hunt</h2>
+    <p>You can't put a fresh network in front of a tactical, full-speed evader and expect it to learn &mdash; it would fail every episode and pick up nothing. So the task is split into three blocks of rising difficulty. <b style="font-weight:500;color:var(--teal)">Tap a block</b> to see its real training phases.</p>
+    <div class="panel">
+      <svg viewBox="0 0 680 174" role="img">
+        <title>The three-block training curriculum.</title>
+        <desc>Block A teaches navigation over 4 phases at an 85 percent gate; Block B teaches chasing a steady mover over 5 phases at 60 percent; Block C teaches catching a juking target over 9 phases at 60 percent. Tap a block to expand its phases.</desc>
+        <defs>
+          <marker id="aCur" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7d8a84" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        </defs>
+        <g class="block c-teal" data-block="A" onclick="showBlock('A')">
+          <rect x="40" y="60" width="180" height="84" rx="8" stroke-width="0.5"/>
+          <text class="th" x="130" y="84" text-anchor="middle" dominant-baseline="central">Navigation</text>
+          <text class="ts" x="130" y="106" text-anchor="middle" dominant-baseline="central">fly to a fixed point</text>
+          <text class="ts" x="130" y="126" text-anchor="middle" dominant-baseline="central">4 phases &middot; gate 85%</text></g>
+        <g class="block c-amber" data-block="B" onclick="showBlock('B')">
+          <rect x="250" y="60" width="180" height="84" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="84" text-anchor="middle" dominant-baseline="central">Moving target</text>
+          <text class="ts" x="340" y="106" text-anchor="middle" dominant-baseline="central">chase a steady mover</text>
+          <text class="ts" x="340" y="126" text-anchor="middle" dominant-baseline="central">5 phases &middot; gate 60%</text></g>
+        <g class="block c-coral" data-block="C" onclick="showBlock('C')">
+          <rect x="460" y="60" width="180" height="84" rx="8" stroke-width="0.5"/>
+          <text class="th" x="550" y="84" text-anchor="middle" dominant-baseline="central">Evasion</text>
+          <text class="ts" x="550" y="106" text-anchor="middle" dominant-baseline="central">catch a juking target</text>
+          <text class="ts" x="550" y="126" text-anchor="middle" dominant-baseline="central">9 phases &middot; gate 60%</text></g>
+        <line x1="224" y1="102" x2="246" y2="102" class="arr" marker-end="url(#aCur)"/>
+        <line x1="434" y1="102" x2="456" y2="102" class="arr" marker-end="url(#aCur)"/>
+      </svg>
+      <div id="phaseDetail"></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <p class="tag"><span class="num">03</span> Earning progression</p>
+    <h2>Mastery, not a schedule</h2>
+    <p>Progress through the curriculum is earned. Before reinforcement learning even begins, the pilot is warm-started by imitating a simple scripted expert &mdash; but only on flying, never on the chase, so the hunting is always learned. A mastery controller then holds the agent in each stage and advances it only once its rolling success rate clears the stage's gate. <b style="font-weight:500;color:var(--teal)">Hover a band</b> for what it trains.</p>
+    <div class="panel">
+      <svg viewBox="0 0 680 370" role="img">
+        <title>The training progression funnel.</title>
+        <desc>A behaviour-cloning warm start on flight only, then reinforcement learning through three mastery-gated blocks converging to a deployable pilot. Hover a band for detail.</desc>
+        <g class="fband c-gray"><title>Imitate a scripted flight expert to warm-start the network — flight only, never the chase.</title>
+          <rect x="80" y="40" width="520" height="44" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="62" text-anchor="middle" dominant-baseline="central">Warm start: imitate expert (flight only)</text></g>
+        <text class="ts" x="340" y="98" text-anchor="middle">then reinforcement learning</text>
+        <g class="fband c-teal"><title>Block A — fly precisely to a point. Advance once 85% of episodes end in a hit.</title>
+          <rect x="120" y="104" width="440" height="44" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="126" text-anchor="middle" dominant-baseline="central">Block A &mdash; navigation</text></g>
+        <text class="ts" x="340" y="162" text-anchor="middle">advance at 85% intercept</text>
+        <g class="fband c-teal"><title>Block B — chase a predictable mover as its speed climbs 10% to 70%.</title>
+          <rect x="150" y="168" width="380" height="44" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="190" text-anchor="middle" dominant-baseline="central">Block B &mdash; moving target</text></g>
+        <text class="ts" x="340" y="226" text-anchor="middle">advance at 60%</text>
+        <g class="fband c-teal"><title>Block C — catch an evader across levels 1→3: weave, reactive juke, tactical breaks.</title>
+          <rect x="180" y="232" width="320" height="44" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="254" text-anchor="middle" dominant-baseline="central">Block C &mdash; evasion (level 1 &rarr; 3)</text></g>
+        <text class="ts" x="340" y="290" text-anchor="middle">advance at 60%</text>
+        <g class="fband c-coral"><title>One policy that earned its way through every gate — ready to carry onboard.</title>
+          <rect x="220" y="296" width="240" height="44" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="318" text-anchor="middle" dominant-baseline="central">Deployable pilot</text></g>
+      </svg>
+      <div class="cap"><span>FIG 03 &mdash; every stage is a gate; the agent only advances by clearing it.</span></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <p class="tag"><span class="num">04</span> Inside one step</p>
+    <h2>A hundredth of a second</h2>
+    <p>Underneath, one tick of the pilot is small and fast: read the true state, pack it into a 39-number vector, run a compact two-layer network, and read out four numbers that decode into collective thrust and body rates &mdash; the low-level language of any flight controller. <b style="font-weight:500;color:var(--teal)">Run a tick</b> to watch it flow.</p>
+    <div class="panel">
+      <svg id="stepSvg" class="pipeline" viewBox="0 0 680 462" role="img">
+        <title>One control step of the interceptor.</title>
+        <desc>Read state; build a 39-dimensional observation of 19 own-and-target, 12 route, and 8 obstacle values; pass through a 39-256-256-4 network; produce a 4-value action; decode into one collective thrust plus three body rates over a 0.01 second tick.</desc>
+        <defs>
+          <marker id="aStp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7d8a84" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        </defs>
+        <g class="stage c-gray" data-step="0"><rect x="160" y="40" width="360" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="62" text-anchor="middle" dominant-baseline="central">Read state</text>
+          <text class="ts" x="340" y="80" text-anchor="middle" dominant-baseline="central">drone + target + obstacles</text></g>
+        <line x1="340" y1="98" x2="340" y2="114" class="arr" marker-end="url(#aStp)"/>
+        <g class="stage c-teal" data-step="1"><rect x="160" y="116" width="360" height="72" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="136" text-anchor="middle" dominant-baseline="central">Build observation</text>
+          <text class="ts" x="340" y="156" text-anchor="middle" dominant-baseline="central">39-D vector, body-frame</text>
+          <text class="ts" x="340" y="174" text-anchor="middle" dominant-baseline="central">19 own+target &middot; 12 route &middot; 8 obstacles</text></g>
+        <line x1="340" y1="190" x2="340" y2="206" class="arr" marker-end="url(#aStp)"/>
+        <g class="stage c-teal" data-step="2"><rect x="160" y="208" width="360" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="230" text-anchor="middle" dominant-baseline="central">Pilot network</text>
+          <text class="ts" x="340" y="248" text-anchor="middle" dominant-baseline="central">39 &rarr; 256 &rarr; 256 &rarr; 4</text></g>
+        <line x1="340" y1="266" x2="340" y2="282" class="arr" marker-end="url(#aStp)"/>
+        <g class="stage c-gray" data-step="3"><rect x="160" y="284" width="360" height="56" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="306" text-anchor="middle" dominant-baseline="central">Action</text>
+          <text class="ts" x="340" y="324" text-anchor="middle" dominant-baseline="central">4 values in [&minus;1, 1]</text></g>
+        <line x1="340" y1="342" x2="340" y2="358" class="arr" marker-end="url(#aStp)"/>
+        <g class="stage c-gray" data-step="4"><rect x="160" y="360" width="360" height="72" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="380" text-anchor="middle" dominant-baseline="central">Decode to control</text>
+          <text class="ts" x="340" y="400" text-anchor="middle" dominant-baseline="central">1 thrust + 3 body rates</text>
+          <text class="ts" x="340" y="418" text-anchor="middle" dominant-baseline="central">&rarr; P-loop &rarr; torque &rarr; 0.01 s tick</text></g>
+      </svg>
+      <div class="cap">
+        <span id="tickReadout">39 in &rarr; 4 out, at 100 Hz</span>
+        <button class="btn" id="tickBtn">Run a tick</button>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <p class="tag"><span class="num">05</span> Why it matters</p>
+    <h2>Built to leave the simulation</h2>
+    <p>The detail that turns a simulation into a path to real autonomy is the shape of those four output numbers. Collective thrust plus body rates is exactly the interface a real drone's inner control loop already accepts &mdash; so moving from sim to hardware doesn't mean redesigning the pilot, only swapping the physics underneath it for the real world.</p>
+    <p>That makes this a software-first autonomy layer: the intelligence that decides <em>how</em> to fly, sitting on top of hardware that already knows how to execute &mdash; not another piece of counter-drone hardware. The same learned pilot that catches an evader in simulation is the one you'd carry onboard.</p>
+    <p class="close">From a definition of "good" to a pilot that hunts &mdash; learned in simulation, built to fly.</p>
+    <footer>
+      <span>AI Drone Tag</span>
+      <span>joebuty.pythonanywhere.com</span>
+    </footer>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  // ---- curriculum phase data (from phases.py) ----
+  var DATA = {
+    A:{name:"Navigation",gate:"85%",mode:"stationary waypoints",
+      phases:[
+        {id:"A1",lab:"reach-near",det:"spawn 250 m \u00b7 hit 15 m \u00b7 1 waypoint"},
+        {id:"A2",lab:"reach-far",det:"spawn 500 m \u00b7 hit 10 m"},
+        {id:"A3",lab:"course-2",det:"hit 8 m \u00b7 2 waypoints"},
+        {id:"A4",lab:"course-tight",det:"spawn 550 m \u00b7 hit 6 m"}
+      ]},
+    B:{name:"Moving target",gate:"60%",mode:"predictable, non-evading",
+      phases:[
+        {id:"B1",lab:"move-nudge",det:"target 10% speed \u00b7 hit 8 m"},
+        {id:"B2",lab:"move-slow",det:"20% speed \u00b7 hit 7 m"},
+        {id:"B3",lab:"move-med-slow",det:"40% speed \u00b7 hit 6 m"},
+        {id:"B4",lab:"move-med-fast",det:"60% speed"},
+        {id:"B5",lab:"move-fast",det:"70% speed"}
+      ]},
+    C:{name:"Evasion",gate:"60%",mode:"target fights back",
+      phases:[
+        {id:"C1\u2013C3",lab:"level 1 \u00b7 weave",det:"35 \u2192 65% speed \u00b7 agility 0.3"},
+        {id:"C4\u2013C6",lab:"level 2 \u00b7 reactive juke",det:"45 \u2192 70% speed \u00b7 agility 0.6"},
+        {id:"C7\u2013C9",lab:"level 3 \u00b7 tactical",det:"55 \u2192 75% speed \u00b7 agility 1.0 \u00b7 hit 5 m"}
+      ]}
+  };
+  function showBlock(b){
+    var blocks=document.querySelectorAll('.block');
+    blocks.forEach(function(g){ g.classList.toggle('sel', g.getAttribute('data-block')===b); });
+    var d=DATA[b], html='';
+    html+='<div class="pd-head"><b>'+d.name+'</b> &middot; '+d.mode+' &middot; advance at '+d.gate+' intercept rate</div>';
+    html+='<div class="pd-grid">';
+    d.phases.forEach(function(p){
+      html+='<div class="pd-cell"><div class="id">'+p.id+'</div><div class="lab">'+p.lab+'</div><div class="det">'+p.det+'</div></div>';
+    });
+    html+='</div>';
+    document.getElementById('phaseDetail').innerHTML=html;
+  }
+  window.showBlock=showBlock;
+  showBlock('A');
+
+  // ---- loop pulse play/pause ----
+  var loopSvg=document.getElementById('loopSvg');
+  var loopBtn=document.getElementById('loopBtn');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var running=true;
+  function setLoop(run){
+    running=run;
+    try{ run ? loopSvg.unpauseAnimations() : loopSvg.pauseAnimations(); }catch(e){}
+    loopBtn.textContent = run ? 'Pause flow' : 'Resume flow';
+  }
+  if(reduce){ setLoop(false); }
+  loopBtn.addEventListener('click', function(){ setLoop(!running); });
+
+  // ---- single-step tick ----
+  var stepSvg=document.getElementById('stepSvg');
+  var tickBtn=document.getElementById('tickBtn');
+  var readout=document.getElementById('tickReadout');
+  var stages=Array.prototype.slice.call(stepSvg.querySelectorAll('.stage'));
+  var lines=[
+    'reading state\u2026',
+    'obs[39] built  (19 + 12 + 8)',
+    'net  39\u2192256\u2192256\u21924',
+    'action[4] = [0.62, \u22120.11, 0.30, \u22120.05]   (example)',
+    'thrust + body rates \u2192 0.01 s tick'
+  ];
+  function runTick(){
+    tickBtn.disabled=true;
+    stepSvg.classList.add('armed');
+    stages.forEach(function(s){ s.classList.remove('active'); });
+    var i=0;
+    (function next(){
+      if(i>0) stages[i-1].classList.remove('active');
+      if(i>=stages.length){
+        stepSvg.classList.remove('armed');
+        readout.textContent='tick complete \u2014 100 of these every second';
+        tickBtn.disabled=false;
+        return;
+      }
+      stages[i].classList.add('active');
+      readout.textContent=lines[i];
+      i++;
+      setTimeout(next, 620);
+    })();
+  }
+  tickBtn.addEventListener('click', runTick);
+})();
+</script>
+</body>
+</html>
+{% endverbatim %}

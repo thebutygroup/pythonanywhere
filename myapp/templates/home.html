@@ -1,54 +1,175 @@
 {% load static %}
 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joe Buty — Engineer</title>
+<meta name="facebook-domain-verification" content="lcclc2sanqtptqjr075h1v3ol9hdtg" />
+<style>
+  :root {
+    --bg: #0b0f14;
+    --bg-2: #11161d;
+    --grid: rgba(80, 200, 160, 0.06);
+    --accent: #34d399;
+    --accent-dim: #1f9d74;
+    --text: #e6edf3;
+    --text-dim: #8b98a5;
+    --card: rgba(255, 255, 255, 0.04);
+    --card-border: rgba(255, 255, 255, 0.09);
+  }
 
-<head><meta name="facebook-domain-verification" content="lcclc2sanqtptqjr075h1v3ol9hdtg" /><style>
-body{
-    text-align:center;
-    color: black;
-    font-family: Helvetica;
-    background-size: cover;
-    background-position:center center;
-    background-repeat: no-repeat;
-    background-attachment:fixed;
-}
-p {
-    display: inline;
-    width: 60%;
-    margin: auto;
-    position: relative;
-    background-color:rgba(0,140,100,0.5);
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-p.low {
-    display: inline;
-    width: 60%;
-    margin: auto;
-    position: relative;
-    /*background-color:rgb(0,140,100)*/
-    background-color:rgba(0,140,100,0.90);
-}
-a {
-    border-radius:3px;
-    display: inline;
-    background-color: rgba(250,250,250,1);
-    position: relative;
-    padding:25px 25px 25px 25px;
-    text-decoration:none;
-    color:Navy;
-}
-input {
-    border: 0;
-    padding: 12px;
-    font-size: 18px;
-}
-input[type="submit"] {
-    background:limegreen;
-    color:black;
-}
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(52, 211, 153, 0.10), transparent 70%);
+    background-size: 44px 44px, 44px 44px, 100% 100%;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+    line-height: 1.6;
+  }
 
+  .card {
+    width: 100%;
+    max-width: 540px;
+    background: var(--bg-2);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  }
 
+  .avatar {
+    width: 160px;
+    height: auto;
+    display: block;
+    margin: 0 auto 24px;
+    border-radius: 16px;
+    border: 2px solid var(--accent-dim);
+    box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.08);
+  }
 
+  .name {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .role {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 5px 12px;
+    border: 1px solid var(--accent-dim);
+    border-radius: 999px;
+  }
+
+  .intro {
+    margin: 26px auto 0;
+    max-width: 400px;
+    color: var(--text-dim);
+    font-size: 15px;
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 32px 0 8px;
+  }
+
+  .links a {
+    display: block;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+  }
+
+  .links a:hover {
+    border-color: var(--accent-dim);
+    background: rgba(52, 211, 153, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .admin-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--card-border);
+    padding-bottom: 2px;
+    transition: color 0.18s ease;
+  }
+  .admin-link:hover { color: var(--accent); }
+
+  .meta {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.9;
+  }
+  .meta b { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 460px) {
+    .card { padding: 36px 22px; }
+    .links { grid-template-columns: 1fr; }
+    .name { font-size: 25px; }
+  }
 </style>
+</head>
+<body>
+  <main class="card">
+    <img class="avatar" src="{% static 'IMG_4787.png' %}" alt="Joe Buty" />
+    <h1 class="name">Joe Buty</h1>
+    <div class="role">Engineer</div>
+
+    <p class="intro">
+      Welcome to my corner of the web. If you're reading this, you might be one
+      of the first to find it — so thanks for stopping by.
+    </p>
+
+    <nav class="links">
+      <a href="/resume/">Resume</a>
+      <a href="https://github.com/thebutygroup">GitHub</a>
+      <a href="/ai-drone-tag/">AI Drone Tag</a>
+    </nav>
+
+    <a class="admin-link" href="/admin/">site admin →</a>
+
+    <div class="meta">
+      Visited <b>{{ right_now.date }}</b> at <b>{{ right_now.time }}</b> local
+      &nbsp;·&nbsp; <b>{{ right_now_utc }}</b> UTC<br>
+      Your IP: <b>{{ user_ip }}</b>
+    </div>
+  </main>
+
 <!-- Facebook Pixel 1507679279372630 Code -->
 <script>
   !function(f,b,e,v,n,t,s)
@@ -100,40 +221,5 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=569581110847614&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Facebook Pixel 569581110847614 Code -->
-</head>
-<body>
-<img src="{% static 'IMG_4787.png' %}" height="250" width="250"/>
-
-<h1>Joe Buty</h1>
-<h1>Data Engineer</h1>
-
-
-<h2>    Hello,</h2>
-
-<h3><p>    Welcome to my webpage. If you are reading this you might be the
-first person to visit my website. So thanks.</p>
-<br></br>
-<br></br>
-<br><br>
-
-<a href="/resume/">My Resume</a>
-<a href="https://github.com/thebutygroup">My Repo</a>
-<a href="https://public.tableau.com/profile/reverend.dude#!/vizhome/NattyNames/NationalNames">My Tableau</a>
-<br><br>
-<br><br>
-<a href="http://joebuty.pythonanywhere.com/admin/">Site Admin</a>
-
-</h3>
-<br></br>
-<br></br>
-<p class="low">You visited this site on <b>{{right_now.date}}</b> at <b>{{right_now.time}}</b> local time.
-    Or in UTC: <b>{{right_now_utc}}</b>
-</p>
-
-
-<br></br>
-<br><br>
-
-<p class="low">You have the IP address: <b>{{user_ip}}</b></p>
 </body>
 </html>

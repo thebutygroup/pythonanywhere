@@ -21,3 +21,6 @@ def home(request):
 def pdf(request):
     filepath = settings.BASE_DIR / "myapp" / "Joe_Buty_Resume.pdf"
     return FileResponse(open(filepath, "rb"), content_type="application/pdf")
+
+def drone(request):
+    return render(request, "drone.html")

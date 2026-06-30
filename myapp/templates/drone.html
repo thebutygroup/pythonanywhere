@@ -298,7 +298,7 @@
     <h2>A hundredth of a second</h2>
     <p>Underneath, one tick of the pilot is small and fast: read the true state, pack it into a 39-number vector, run a compact two-layer network, and read out four numbers that decode into collective thrust and body rates &mdash; the low-level language of any flight controller. <b style="font-weight:500;color:var(--teal)">Run a tick</b> to watch it flow.</p>
     <div class="panel">
-      <svg id="stepSvg" class="pipeline" viewBox="0 0 680 462" role="img">
+      <svg id="stepSvg" class="pipeline" viewBox="0 0 680 478" role="img">
         <title>One control step of the interceptor.</title>
         <desc>Read state; build a 39-dimensional observation of 19 own-and-target, 12 route, and 8 obstacle values; pass through a 39-256-256-4 network; produce a 4-value action; decode into one collective thrust plus three body rates over a 0.01 second tick.</desc>
         <defs>
@@ -317,14 +317,16 @@
           <text class="th" x="340" y="230" text-anchor="middle" dominant-baseline="central">Pilot network</text>
           <text class="ts" x="340" y="248" text-anchor="middle" dominant-baseline="central">39 &rarr; 256 &rarr; 256 &rarr; 4</text></g>
         <line x1="340" y1="266" x2="340" y2="282" class="arr" marker-end="url(#aStp)"/>
-        <g class="stage c-gray" data-step="3"><rect x="160" y="284" width="360" height="56" rx="8" stroke-width="0.5"/>
-          <text class="th" x="340" y="306" text-anchor="middle" dominant-baseline="central">Action</text>
-          <text class="ts" x="340" y="324" text-anchor="middle" dominant-baseline="central">4 values in [&minus;1, 1]</text></g>
-        <line x1="340" y1="342" x2="340" y2="358" class="arr" marker-end="url(#aStp)"/>
-        <g class="stage c-gray" data-step="4"><rect x="160" y="360" width="360" height="72" rx="8" stroke-width="0.5"/>
-          <text class="th" x="340" y="380" text-anchor="middle" dominant-baseline="central">Decode to control</text>
-          <text class="ts" x="340" y="400" text-anchor="middle" dominant-baseline="central">1 thrust + 3 body rates</text>
-          <text class="ts" x="340" y="418" text-anchor="middle" dominant-baseline="central">&rarr; P-loop &rarr; torque &rarr; 0.01 s tick</text></g>
+        <g class="stage c-gray" data-step="3"><rect x="160" y="284" width="360" height="72" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="302" text-anchor="middle" dominant-baseline="central">Action</text>
+          <text class="ts" x="340" y="322" text-anchor="middle" dominant-baseline="central">4 values in [&minus;1, 1]</text>
+          <text class="ts" x="340" y="342" text-anchor="middle" dominant-baseline="central">thrust &middot; roll &middot; pitch &middot; yaw</text>
+          <text class="ts" x="340" y="342" text-anchor="middle" dominant-baseline="central">a&#8320; thrust &#183; a&#8321; roll &#183; a&#8322; pitch &#183; a&#8323; yaw</text></g>
+        <line x1="340" y1="358" x2="340" y2="374" class="arr" marker-end="url(#aStp)"/>
+        <g class="stage c-gray" data-step="4"><rect x="160" y="376" width="360" height="72" rx="8" stroke-width="0.5"/>
+          <text class="th" x="340" y="396" text-anchor="middle" dominant-baseline="central">Decode to control</text>
+          <text class="ts" x="340" y="416" text-anchor="middle" dominant-baseline="central">1 thrust + 3 body rates</text>
+          <text class="ts" x="340" y="434" text-anchor="middle" dominant-baseline="central">&rarr; P-loop &rarr; torque &rarr; 0.01 s tick</text></g>
       </svg>
       <div class="cap">
         <span id="tickReadout">39 in &rarr; 4 out, at 100 Hz</span>
@@ -556,9 +558,16 @@
 
   function frame(){
     if(!alive) return;
-    var tx, ty;
-    if(perch){ tx = perch.px - sx(); ty = perch.py - sy(); }
-    else { tx = pointer.x; ty = pointer.y; }
+    if(perch){
+      x = perch.px - sx(); y = perch.py - sy();
+      vx = 0; vy = 0; heading = 0;
+      body.setAttribute('transform','translate('+x.toFixed(1)+','+y.toFixed(1)+') rotate(0)');
+      for(var j=0;j<N;j++){ tps[j].setAttribute('opacity','0'); }
+      hist.length = 0;
+      requestAnimationFrame(frame);
+      return;
+    }
+    var tx = pointer.x, ty = pointer.y;
     vx = vx*DAMP + (tx - x)*K;
     vy = vy*DAMP + (ty - y)*K;
     var sp = Math.hypot(vx,vy);
